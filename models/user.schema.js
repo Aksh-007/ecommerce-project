@@ -3,6 +3,8 @@ import authRoles from "../utility/authRoles";
 import bcrypt from "bcryptjs";
 import JWT from "jsonwebtoken";
 import crypto from "crypto";
+import config from "../config/index"
+
 
 const userSchema = mongoose.Schema(
     {
@@ -52,6 +54,32 @@ userSchema.pre("save", async function (next) {
     next();
 })
 
+
+// add more features directl to schema
+//using ptotype injection 
+
+userSchema.methods = {
+    //method for compare password
+    //added method so we can reuse whenever we want to compare the password
+    comparePassword : async function(enteredPassword){
+        return await bcrypt.compare(enteredPassword, this.password)
+    },
+
+    // generate JWT token
+    getJwtToken : function(){
+        return JWT.sign(
+            {
+                //first is variable and another is coming from databse
+                userId : this._id,
+                role : this.role
+            },
+            config.JWT_SECRET,
+            {
+                expiresIn: config.JWT_EXPIRY
+            }
+        )
+    }
+}
 
 
 
