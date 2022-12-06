@@ -44,7 +44,7 @@ const userSchema = mongoose.Schema(
 //note: donot use arrow function here 
 // this is middleware or hooks of mongoose whenever we calling save the password first encrypted and then it will save that why it is {Pre} hooks
 userSchema.pre("save", async function (next) {
-    
+
     // we are checking if password field is not there then it will ends up here and if any other middleware we want to learn then we ca do that 
     if (!this.isModified("password")) {
         return next();
@@ -61,27 +61,47 @@ userSchema.pre("save", async function (next) {
 userSchema.methods = {
     //method for compare password
     //added method so we can reuse whenever we want to compare the password
-    comparePassword : async function(enteredPassword){
+    comparePassword: async function (enteredPassword) {
         return await bcrypt.compare(enteredPassword, this.password)
     },
 
     // generate JWT token
-    getJwtToken : function(){
+    getJwtToken: function () {
         return JWT.sign(
             {
                 //first is variable and another is coming from databse
-                userId : this._id,
-                role : this.role
+                userId: this._id,
+                role: this.role
             },
             config.JWT_SECRET,
             {
                 expiresIn: config.JWT_EXPIRY
             }
         )
+    },
+
+    //genearate Forgot password string using crypto package
+    generateForgotPasswordToken: function () {
+        const forgotToken = crypto.randomBytes(20).toString('hex')
+
+        //step 1 - save to database
+        //first encrypting the token using crypto 
+        // this is a database call this.forgotPasswordToken is from line 34 so whenevr we are calling this its automatically update in databse
+        this.forgotPasswordToken = crypto
+            .createHash("sha256")
+            .update(forgotToken)
+            .digest("hex")
+
+            // 20 * 60 * 1000 = 20minutes
+            // updating forgotPasswordExpiry date in database
+        this.forgotPasswordExpiry = Date.now() + 20 * 60 * 1000;
+
+
+        // step 2 - return value to user
+        return forgotToken;
     }
+
 }
-
-
 
 
 export default mongoose.model("User", userSchema);
