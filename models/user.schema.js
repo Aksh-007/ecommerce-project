@@ -46,7 +46,7 @@ const userSchema = mongoose.Schema(
 userSchema.pre("save", async function (next) {
     
     // we are checking if password field is not there then it will ends up here and if any other middleware we want to learn then we ca do that 
-    if (!this.modified("password")) {
+    if (!this.isModified("password")) {
         return next();
     }
     // if password field is available then go and encrypt the password 
