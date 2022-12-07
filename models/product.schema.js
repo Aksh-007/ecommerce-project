@@ -17,6 +17,7 @@ const productSchema = mongoose.Schema(
             type: String,
             //use some form of editior - personal assingment
         },
+        // just a array of object
         productPhoto: [
             {
                 url: {
@@ -40,11 +41,10 @@ const productSchema = mongoose.Schema(
         // category in phone like apple , samasung, nokia,xiaomi, poco
         collectionId: {
             // ObjectId is used to store ids 
-            type:mongoose.Schema.Types.ObjectId,
+            type: mongoose.Schema.Types.ObjectId,
             // refernece of another schema
-            ref:"Collection"
-        } 
-
+            ref: "Collection"
+        }
     },
     {
         timestamps: true

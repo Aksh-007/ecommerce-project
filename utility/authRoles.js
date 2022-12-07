@@ -1,7 +1,7 @@
-const authRoles = {
-    ADMIN: "ADMIN",
-    MODERATOR: "MODERATOR",
-    USER: "USER"
-}
+    const authRoles = {
+        ADMIN: "ADMIN",
+        MODERATOR: "MODERATOR",
+        USER: "USER"
+    }
 
-export default authRoles;
+    export default authRoles;
