@@ -45,7 +45,7 @@ const userSchema = mongoose.Schema(
 // this is middleware or hooks of mongoose whenever we calling save the password first encrypted and then it will save that why it is {Pre} hooks
 userSchema.pre("save", async function (next) {
 
-    // we are checking if password field is not there then it will ends up here and if any other middleware we want to learn then we ca do that 
+    // we are checking if password field is not there then it will ends up here and if any other middleware we want to add then we ca do that 
     if (!this.isModified("password")) {
         return next();
     }

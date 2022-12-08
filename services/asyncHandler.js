@@ -15,7 +15,7 @@ const asyncHandler = (fn) => async (req, res , next) => {
 
 
 
-export default asynchandler;
+export default asyncHandler;
 
 /*
     higher order function
