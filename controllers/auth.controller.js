@@ -101,7 +101,8 @@ export const login = asyncHandler(async (req, res) => {
 @returns success message
 ***************************************************************************/
 
-export const logout = asyncHandler(async (req, res) => {
+// we are not using any request so that we are using _req
+export const logout = asyncHandler(async (_req, res) => {
     // we can also use res.clearCookies()
     res.cookie('token', null, {
         expires :new Date(Date.now()),
