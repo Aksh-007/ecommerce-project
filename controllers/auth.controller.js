@@ -13,13 +13,13 @@ cookiesOptions();
 @SIGNUP
 @route http://localhost:4000/api/auth/signup
 @description User signup controller for creating a new user
-@parameters name,email,password
+@parameters userName,email,password
 @returns User Object
 ***************************************************************************/
 export const signUp = asyncHandler(async (req, res) => {
-    const { name, email, password } = req.body;
+    const { userName, email, password } = req.body;
 
-    if (!(name || email || password)) {
+    if (!(userName || email || password)) {
         throw new customError('Please fill all fields', 400);
     }
 
@@ -34,7 +34,7 @@ export const signUp = asyncHandler(async (req, res) => {
     // here we dont want to encrypt the password bcoz in userModel we already written a method which decrypt every time a password file is inserted in database 
     const newUser = await userModel.create({
         // if the database fields and the frontend field is same then just pass name,if not then pass name:username something like that
-        name: name,
+        userName: userName,
         email,
         password
     });
