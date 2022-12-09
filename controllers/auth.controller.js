@@ -3,7 +3,8 @@ import asyncHandler from "../services/asyncHandler";
 import customError from "../utility/customError";
 import cookiesOptions from "../utility/cookiesOptions";
 import mailHelper from "../utility/mailHelper";
-
+import crypto from "crypto";
+import { json } from "body-parser";
 
 
 cookiesOptions();
@@ -70,7 +71,7 @@ export const login = asyncHandler(async (req, res) => {
     }
 
     // here we are quering to mongodb that we want password of user but in schema password    {select: false} so we are passing ("+password") so databse can send password and if you dont want anything like name from databse then ("-name")can use
-    const user = userModel.findOne({ email }).select('+password');
+    const user = await userModel.findOne({ email }).select('+password');
 
     // here we are giving invalid credintial bcoz we dont want to give attacker hint that email is there just password is wrong or viceversa
     if (!user) {
@@ -144,16 +145,16 @@ export const forgotPassword = asyncHandler(async (req, res) => {
     const resetUrl = `${req.protocol}://${req.get('host')}/api/auth/password/reset/${resetToken}`
     //here you can see reset url
     console.log(resetUrl);
-        const text =`your password reset link url is \n\n ${resetUrl} \n\n`
+    const text = `your password reset link url is \n\n ${resetUrl} \n\n`
     try {
         await mailHelper({
-            email:user.email,
-            subject:"Password reset email ",
-            text:text,
+            email: user.email,
+            subject: "Password reset email ",
+            text: text,
         })
         res.status(200).json({
-            sucess:true,
-            message:`Email sent to ${user.email}`
+            sucess: true,
+            message: `Email sent to ${user.email}`
         })
 
     } catch (error) {
@@ -162,12 +163,66 @@ export const forgotPassword = asyncHandler(async (req, res) => {
         user.forgotPasswordToken = undefined;
         user.forgotPasswordExpiry = undefined;
         //saving the changes in databse
-        await user.save({validateBeforeSave:false});
+        await user.save({ validateBeforeSave: false });
         throw new customError(err.message || `email was not sent`, 500);
-        
+
 
 
 
     }
 
 });
+
+
+/**************************************************************************
+@RESET_PASSWORD
+//here we are taking :resetPasswordToken bcoz we are sending resetToken
+@route http://localhost:4000/api/auth/password/reset/:resetToken
+@description User will be able to reset password based on url token
+@parameters token from url , password and confirm password
+@returns User object 
+***************************************************************************/
+
+export const resetPassword = asyncHandler(async (req, res) => {
+   // grabing token from url
+    const {token:resetToken}= req.params
+    const{password, confirmPassword} = req.body
+    // token is encrypted so decrypting 
+   const resetPasswordToken =  crypto
+    .createHash('SHA256')
+    .update(resetToken)
+    .digest('hex')
+
+    //now we are finding based on forgotPasswordToken
+    //userModel.findOne ({email : email})
+    const user = await userModel.findOne({
+        forgotPasswordToken : resetPasswordToken,
+        forgotPasswordExpiry:{$gt : Date.now()}
+    });
+
+    if (!user) {
+        throw new customError(`Password token is invalid or expired`, 400)
+    }
+    //checking if password and confirm password is same
+    if (password !== confirmPassword) {
+        throw new customError('password and confirm password doesnt match', 400)
+    }
+
+    user.password = password
+    // no we are saving forgotPasswordToken,forgotPasswordExpiry is undefined in database bcs dont want to store junk 
+    user.forgotPasswordToken = undefined
+    user.forgotPasswordExpiry = undefined
+
+    // now saving it to database
+    await user.save();
+    //  create a token and send as response
+    const token = user.getJwtToken();
+    user.password = undefined
+    
+    res.cookie('token', token, cookiesOptions);
+    res.status(200),json({
+        sucess:true,
+        user
+    })
+})
+
