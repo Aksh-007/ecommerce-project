@@ -113,3 +113,24 @@ export const logout = asyncHandler(async (_req, res) => {
         message: `Logged out`
     })
 });
+
+
+
+/**************************************************************************
+@FORGT_PASSWORD
+@route http://localhost:4000/api/auth/password/forgot
+@description User will submit email and we will genereate a token
+@parameters email 
+@returns success message- password reset email sent 
+***************************************************************************/
+
+export const forgotPassword = asyncHandler(async (req, res)=>{
+    const {email} = req.body;
+    if (!email) {
+        throw new customError('please enter the email', 404)
+    }
+    const user = await userModel.findOne({email});
+    if (!user) {
+        throw new customError('user not found', 404)
+    }
+});
