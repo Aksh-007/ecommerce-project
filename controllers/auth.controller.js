@@ -2,6 +2,7 @@ import userModel from "../models/user.schema";
 import asyncHandler from "../services/asyncHandler";
 import customError from "../utility/customError";
 import cookiesOptions from "../utility/cookiesOptions";
+import mailHelper from "../utility/mailHelper";
 
 
 
@@ -105,11 +106,11 @@ export const login = asyncHandler(async (req, res) => {
 export const logout = asyncHandler(async (_req, res) => {
     // we can also use res.clearCookies()
     res.cookie('token', null, {
-        expires :new Date(Date.now()),
-        httpOnly :true
+        expires: new Date(Date.now()),
+        httpOnly: true
     })
     res.status(200).json({
-        sucess:true,
+        sucess: true,
         message: `Logged out`
     })
 });
@@ -124,13 +125,49 @@ export const logout = asyncHandler(async (_req, res) => {
 @returns success message- password reset email sent 
 ***************************************************************************/
 
-export const forgotPassword = asyncHandler(async (req, res)=>{
-    const {email} = req.body;
+export const forgotPassword = asyncHandler(async (req, res) => {
+    const { email } = req.body;
     if (!email) {
         throw new customError('please enter the email', 404)
     }
-    const user = await userModel.findOne({email});
+    const user = await userModel.findOne({ email });
     if (!user) {
         throw new customError('user not found', 404)
     }
+
+    const resetToken = userModel.generateForgotPasswordToken();
+    //while saving user we need every valdation in model so
+    await user.save({ validateBeforeSave: false });
+
+    // now creating reset url
+    // `https://hitesh.com`
+    const resetUrl = `${req.protocol}://${req.get('host')}/api/auth/password/reset/${resetToken}`
+    //here you can see reset url
+    console.log(resetUrl);
+        const text =`your password reset link url is \n\n ${resetUrl} \n\n`
+    try {
+        await mailHelper({
+            email:user.email,
+            subject:"Password reset email ",
+            text:text,
+        })
+        res.status(200).json({
+            sucess:true,
+            message:`Email sent to ${user.email}`
+        })
+
+    } catch (error) {
+        // this is main process in mailverification if we are not able to sent email 
+        // so we are roll back the change that is forgotPasswordToken , forgotPasswordExpiry so making them undefined
+        user.forgotPasswordToken = undefined;
+        user.forgotPasswordExpiry = undefined;
+        //saving the changes in databse
+        await user.save({validateBeforeSave:false});
+        throw new customError(err.message || `email was not sent`, 500);
+        
+
+
+
+    }
+
 });
