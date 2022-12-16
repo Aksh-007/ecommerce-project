@@ -15,4 +15,4 @@ const config = {
     SMTP_MAIL_PASSWORD: process.env.SMTP_MAIL_PASSWORD,
     SMTP_MAIL_Email: process.env.SMTP_MAIL_Email
 }
-export default config
+export default config;
