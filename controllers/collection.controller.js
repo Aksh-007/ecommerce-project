@@ -80,7 +80,7 @@ export const updateCollection = asyncHandler(async (req, res) => {
 
 /**************************************************************************
 @DELETE_COLLECTION
-@route http://localhost:4000/api/auth/signup
+@route http://localhost:4000/api/collection/delete
 @description Delete the specific collection using collectionId
 @parameters collectionID
 ***************************************************************************/
@@ -100,11 +100,26 @@ export const deleteCollection = asyncHandler(async (req, res) => {
         sucess: true,
         message: `Collection deleted sucessfully`,
     });
-
-
 });
 
+/**************************************************************************
+@COLLECTION_LIST
+@route http://localhost:4000/api/getAllCollection
+@description sending all the collection in a database
+@parameters list of collection
+***************************************************************************/
+export const getAllCollection = asyncHandler(async (req, res) => {
+    // here we are sending a list of collection to frontend user if want evey collection in db then pls dont any paramater in find() and if want to find using specific keyword like email then .find({email})
+    const collections = await collectionModel.find();
 
+    //checking validation 
+    if (!collections) {
+        throw new customError(`No Collection found`, 400);
+    }
 
+    res.status(200).json({
+        sucess:true,
+        collections,
+    });
 
-
+})
