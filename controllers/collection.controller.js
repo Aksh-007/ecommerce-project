@@ -71,10 +71,36 @@ export const updateCollection = asyncHandler(async (req, res) => {
 
     //send response to frontend
     res.status(200).json({
-        sucess:true,
-        message:`Collection updated sucessfully `,
+        sucess: true,
+        message: `Collection updated sucessfully `,
         updatedCollectionName
     });
+
+});
+
+/**************************************************************************
+@DELETE_COLLECTION
+@route http://localhost:4000/api/auth/signup
+@description Delete the specific collection using collectionId
+@parameters collectionID
+***************************************************************************/
+export const deleteCollection = asyncHandler(async (req, res) => {
+    const { id: collectionId } = req.params;
+
+    const deleteCollection = await collectionModel.findByIdAndDelete(collectionId);
+
+    if (!deleteCollection) {
+        throw new customError(`Collection not found`, 400);
+    }
+    // deallocating the memory for code optimization
+    deleteCollection.remove(); // or use delete()
+
+    //send response to frontend
+    res.status(200).json({
+        sucess: true,
+        message: `Collection deleted sucessfully`,
+    });
+
 
 });
 
