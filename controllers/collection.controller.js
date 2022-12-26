@@ -122,4 +122,4 @@ export const getAllCollection = asyncHandler(async (req, res) => {
         collections,
     });
 
-})
+});
