@@ -6,7 +6,6 @@ import mailHelper from "../utility/mailHelper";
 import crypto from "crypto";
 import { json } from "body-parser";
 
-
 cookiesOptions();
 
 /**************************************************************************
@@ -119,7 +118,7 @@ export const logout = asyncHandler(async (_req, res) => {
 
 
 /**************************************************************************
-@FORGT_PASSWORD
+@FORGOT_PASSWORD
 @route http://localhost:4000/api/auth/password/forgot
 @description User will submit email and we will genereate a token
 @parameters email 
