@@ -21,7 +21,7 @@ export const createCollection = asyncHandler(async (req, res) => {
 
     // now send the collectionName to database
     const collectionNameDb = await collectionModel.create({
-        name
+        collectionName
     });
 
     //send this response value to frontend
@@ -37,7 +37,7 @@ export const createCollection = asyncHandler(async (req, res) => {
 
 /**************************************************************************
 @UPDATE_COLLECTION
-@route http://localhost:4000/api/auth/signup
+@route http://localhost:4000/api/collection/updateCollection
 @description User signup controller for creating a new user
 @parameters userName,email,password
 @returns User Object
