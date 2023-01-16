@@ -55,10 +55,14 @@ export const updateCollection = asyncHandler(async (req, res) => {
     }
 
     let updatedCollectionName = await collectionModel.findByIdAndUpdate(
+        // this is the id of the collection that we want to update
         collectionId,
+        // and the new value 
         {
+
             newCollectionName
         },
+        // we are mentioning  that give me new updated value and also check the validators 
         {
             new: true,
             runValidators: true
