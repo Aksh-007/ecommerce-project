@@ -38,7 +38,7 @@ export const createCollection = asyncHandler(async (req, res) => {
 /**************************************************************************
 @UPDATE_COLLECTION
 @route http://localhost:4000/api/collection/updateCollection
-@description User signup controller for creating a new user
+@description Update a existing collection 
 @parameters userName,email,password
 @returns User Object
 ***************************************************************************/
@@ -69,6 +69,7 @@ export const updateCollection = asyncHandler(async (req, res) => {
         }
     );
 
+    // if  collection updation  is failed then handling it gracefully
     if (!updatedCollectionName) {
         throw new customError(`Collection Not Found `, 400)
     }
