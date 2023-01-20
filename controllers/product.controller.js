@@ -52,7 +52,9 @@ export const addProduct = asyncHandler(async (req, res) => {
                         body: data,
                         contentType: element.mimetype
                     })
-                    return
+                    return{
+                        secure_url : upload.Location
+                    }
                 })
             )
 
