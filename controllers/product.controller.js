@@ -18,7 +18,7 @@ import config from '../config/index.js'
  * @returns Product Object
  *********************************************************/
 
-export const addProduct = asyncHandler(async (req, res) => {
+export const addProducts = asyncHandler(async (req, res) => {
     const form = formidable({
         multiples: true,
         keepExtensions: true
