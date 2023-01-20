@@ -86,7 +86,7 @@ export const addProduct = asyncHandler(async (req, res) => {
 
 /**********************************************************
  * @GET_ALL_PRODUCT
- * @route https://localhost:5000/api/allproduct
+ * @route https://localhost:5000/api/product/allproduct
  * @description Controller used to get all product
  * @description 
  * @returns all product 
@@ -109,7 +109,7 @@ export const getAllProduct = asyncHandler(async (req, res) => {
 
 /**********************************************************
  * @GET_PRODUCT_BY_ID
- * @route https://localhost:5000/api/getProductById
+ * @route https://localhost:5000/api/product/getProductById
  * @description Controller used to get a specific product
  * @returns specific  product 
  *********************************************************/
@@ -133,7 +133,7 @@ export const getProductById = asyncHandler(async (req, res) => {
 
 /**********************************************************
  * @DELETE_PRODUCT
- * @route https://localhost:5000/api/deleteProduct
+ * @route https://localhost:5000/api/product/deleteProduct
  * @description Controller used to get delete a product
  * @returns delete product 
  *********************************************************/
@@ -153,13 +153,12 @@ export const deleteProduct = asyncHandler(async (req, res) => {
 
 
 
-
 /**************************************************************************
 @UPDATE_PRODUCT
-@route http://localhost:4000/api/collection/updateProduct
-@description Update a existing collection 
-@parameters userName,email,password
-@returns User Object
+@route http://localhost:4000/api/product/updateProduct
+@description Update a existing  prosuct
+@parameters productId , updatedProductName
+@returns updated product
 ***************************************************************************/
 export const updateProduct = asyncHandler(async (req, res) => {
     const { id: productId } = req.params;
