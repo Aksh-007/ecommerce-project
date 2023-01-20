@@ -129,3 +129,26 @@ export const getProductById = asyncHandler(async (req, res) => {
 });
 
 
+
+
+/**********************************************************
+ * @DELETE_PRODUCT
+ * @route https://localhost:5000/api/deleteProduct
+ * @description Controller used to get delete a product
+ * @returns delete product 
+ *********************************************************/
+
+export const deleteProduct = asyncHandler(async (req, res) => {
+    const deleteProductId = req.params;
+    const deletedProduct = await productModel.findByIdAndDelete({deleteProductId});
+    if (!deletedProduct) {
+        throw new customError(`Product was not deleted`, 404)
+    }
+
+    res.status(200).json({
+        sucess:true,
+        deletedProduct
+    })
+});
+
+
