@@ -100,7 +100,7 @@ export const getAllProduct = asyncHandler(async (req, res) => {
     }
 
     res.status(200).json({
-        sucess:true,
+        sucess: true,
         allProduct
     })
 });
@@ -116,14 +116,14 @@ export const getAllProduct = asyncHandler(async (req, res) => {
 
 export const getProductById = asyncHandler(async (req, res) => {
     const productId = req.params;
-    const product = await productModel.findById({productId});
+    const product = await productModel.findById({ productId });
 
     if (!product) {
         throw new customError(`No product found `, 404);
     }
 
     res.status(200).json({
-        sucess:true,
+        sucess: true,
         product
     })
 });
@@ -140,15 +140,55 @@ export const getProductById = asyncHandler(async (req, res) => {
 
 export const deleteProduct = asyncHandler(async (req, res) => {
     const deleteProductId = req.params;
-    const deletedProduct = await productModel.findByIdAndDelete({deleteProductId});
+    const deletedProduct = await productModel.findByIdAndDelete({ deleteProductId });
     if (!deletedProduct) {
         throw new customError(`Product was not deleted`, 404)
     }
 
     res.status(200).json({
-        sucess:true,
+        sucess: true,
         deletedProduct
     })
 });
 
 
+
+
+/**************************************************************************
+@UPDATE_PRODUCT
+@route http://localhost:4000/api/collection/updateProduct
+@description Update a existing collection 
+@parameters userName,email,password
+@returns User Object
+***************************************************************************/
+export const updateProduct = asyncHandler(async (req, res) => {
+    const { id: productId } = req.params;
+    const { newProductName } = req.body;
+
+    if (!newProductName) {
+        throw new customError(`prosuct name is required`, 400);
+    }
+
+    let updatedProductname = await productModel.findByIdAndUpdate(
+        productId,
+        {
+            newProductName
+        },
+        {
+            new: true,
+            runValidators: true
+        }
+    );
+
+    if (!updatedProductname) {
+        throw new customError(`Product was not updated succesfully`, 400)
+    }
+
+    res.status(200).json({
+        sucess:true,
+        message:`Product updated succesfully`,
+        updatedProductname
+    });
+
+
+});
