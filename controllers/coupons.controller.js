@@ -24,7 +24,7 @@ import couponModel from '../models/coupon.schema.js'
 
 /**********************************************************
  * @DELETE_COUPON
- * @route https://localhost:5000/api/coupon/:couponId
+ * @route https://localhost:5000/api/coupon/deleteCoupon
  * @description Controller used for deleting the coupon
  * @description Only admin and Moderator can delete the coupon
  * @returns Success Message "Coupon Deleted SuccessFully"
@@ -48,7 +48,7 @@ export const deleteCoupon = asyncHandler(async (req, res) => {
 
 /**********************************************************
  * @GET_ALL_COUPONS
- * @route https://localhost:5000/api/coupon
+ * @route https://localhost:5000/api/getAllCoupon
  * @description Controller used for getting all coupons details
  * @description Only admin and Moderator can get all the coupons
  * @returns allCoupons Object
