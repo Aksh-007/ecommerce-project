@@ -52,16 +52,16 @@ export const addProduct = asyncHandler(async (req, res) => {
                         body: data,
                         contentType: element.mimetype
                     })
-                    return{
-                        secure_url : upload.Location
+                    return {
+                        secure_url: upload.Location
                     }
                 })
             )
 
             let imgArray = await imageArrayResponse;
             const product = await productModel.create({
-                _id : productId,
-                photos : imgArray,
+                _id: productId,
+                photos: imgArray,
                 ...fields,
             });
 
@@ -71,7 +71,7 @@ export const addProduct = asyncHandler(async (req, res) => {
 
             }
             res.status(200).json({
-                sucess:true,
+                sucess: true,
                 product
             })
 
@@ -83,3 +83,28 @@ export const addProduct = asyncHandler(async (req, res) => {
         }
     })
 });
+
+/**********************************************************
+ * @GET_ALL_PRODUCT
+ * @route https://localhost:5000/api/allproduct
+ * @description Controller used to get all product
+ * @description 
+ * @returns all product 
+ *********************************************************/
+
+export const getAllProduct = asyncHandler(async (req, res) => {
+    const allProduct = await productModel.find({})
+
+    if (!allProduct) {
+        throw new customError(`No product was found`, 404)
+    }
+
+    res.status(200).json({
+        sucess:true,
+        allProduct
+    })
+});
+
+
+
+
