@@ -59,7 +59,7 @@ export const addProduct = asyncHandler(async (req, res) => {
         } catch (error) {
             return res.status(500).json({
                 sucess: false,
-                message: error.message || `Something went wrong`
+                message: error.message || `Image not uploaded succesfully`
             })
         }
     })
