@@ -58,10 +58,27 @@ export const addProduct = asyncHandler(async (req, res) => {
                 })
             )
 
+            let imgArray = await imageArrayResponse;
+            const product = await productModel.create({
+                _id : productId,
+                photos : imgArray,
+                ...fields,
+            });
+
+            if (!product) {
+                throw new customError(`Product was not created`, 400);
+                // remove Image
+
+            }
+            res.status(200).json({
+                sucess:true,
+                product
+            })
+
         } catch (error) {
             return res.status(500).json({
                 sucess: false,
-                message: error.message || `Image not uploaded succesfully`
+                message: error.message || ` !oops , Product was not added `
             })
         }
     })
